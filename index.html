@@ -258,30 +258,30 @@ function resetSave() {
 	if (fighting == 1) {
 			if (turn == 1) {
 				if (health > 0) {
-				enemyhp = enemyhp - strength * 5
+				enemyhp = Math.max(0, enemyhp - strength * 5)
 				document.getElementById("enemyhp").innerHTML = enemyhp;
 				if (enemyhp <= 0) {
 				enemyhp = 25;
 				xp = xp + stage * 5
+				}
 				turn = 2
-				}
 			}
 			}
-			if (turn == 2) {
-				if (enemyhp =< 0) {
-				health = health - stage * 3
-				}
+			if (enemyhp > 0) {
+				health = Math.max(0, health - stage * 3)
 				document.getElementById("health").innerHTML = health;
+				}
 				turn = 1
 				if (health <= 0) {
 				health = 0
 				fighting = 0
-				}
-			}
-			}
-			}
-		}
-	if (fighting == 0) {
+				turn = 1
+				}}
+	}, 1000);
+
+	
+	setInterval(function() {
+		if (fighting == 0) {
 			enemyhp = stage * 25;
 			enemymaxhp = enemyhp;
 			document.getElementById("enemyhp").innerHTML = enemyhp;
@@ -289,9 +289,8 @@ function resetSave() {
 		if (health == maxhealth) {
 			turn = 1
 			fighting = 1;
-			}
-		}
-	}, 1000);	
+			}}
+		}, 100);
 		
 	setInterval(function() {
 		saveGame()
