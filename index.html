@@ -1,0 +1,299 @@
+<HTML>
+<head>
+<title>RPG</title>
+</head>
+<style>
+.background {
+	background: #000000;
+}
+.area {
+	float: left;
+	padding-top: 20px;
+	padding-left: 96px;
+	font-size: 24px;
+	display: inline-block;
+}
+
+.enemystats {
+	color: white;
+}
+	
+.stats {
+	float: right;
+	padding-top: 20px;
+	padding-right: 96px;
+	font-size: 24px;
+	display: inline-block;
+}
+
+.hud {
+	text-align: center;
+	top: 20px;
+	font-size: 24px;
+	left: 900px;
+	position: absolute;
+}
+.text {
+	color: white;
+}
+
+</style>
+
+<body class="background">
+
+<div class="area">
+
+<button onClick="previousStage()"><-</button><span id="stage" style="color:white">1</span><button onClick="nextStage()">-></button><br><br>
+
+<div class="enemystats">
+<span id="enemyhp">25</span> / <span id="enemymaxhp">25</span>
+
+</div></div>
+
+<div class="stats">	
+<img style="padding-right: 24px" src="images/stats.png" height="96px" width="96px">
+<p style="color:white"><span id="strength">1</span> Strength </p><button onClick="strengthUp()">+</button>
+<img style="padding-right: 12px" src="images/strength.png" height="48px" width="48px">
+<p style="color:white"><span id="magic">1</span> Magic </p><button onClick="magicUp()">+</button>
+<img style="padding-right: 12px" src="images/magic.png" height="48px" width="48px">
+<p style="color:white"><span id="vitality">1</span> Vitality </p><button onClick="vitalityUp()">+</button>
+<img style="padding-right: 12px" src="images/vitality.png" height="48px" width="48px">
+<p style="color:white"><span id="agility">1</span> Agility </p><button onClick="agilityUp()">+</button>
+<img style="padding-right: 12px" src="images/agility.png" height="48px" width="48px">
+<br><br><br>
+<div class="text">
+<span id="points">0</span> Stat Points
+</div></div>
+
+<div class="hud">
+<p style="color:white" style="padding-left:48px">Level <span id="level">1</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="gold">0</span> Gold</p>
+<p style="color:white" style="padding-right: 10px"></p>
+<p style="color:white"><span id="health">25</span>/<span id="maxhealth">25</span> Health</p>
+<p style="color:white"><span id="mana">10</span>/<span id="maxmana">10</span> Mana</p>
+<p style="color:white"><span id="xp">0</span>/<span id="xpreq">20</span> XP</p>
+</div>
+
+
+<script>
+var health = 25
+var maxhealth = 25
+var gold = 0
+var level = 1
+var xp = 0
+var xpreq = 20
+var strength = 1
+var vitality = 1
+var magic = 1
+var agility = 1
+var mana = 10
+var maxmana = 10
+var stage = 1
+var fighting = 0
+var turn = 1
+var enemyhp = 25
+var enemymaxhp = 25
+var points = 0
+
+function loadGame() {
+	var savedGame = JSON.parse(localStorage.getItem("gameSave"));
+		if (typeof savedGame.health !== "undefined") health = savedGame.health;
+		if (typeof savedGame.maxhealth !== "undefined") maxhealth = savedGame.maxhealth;
+		if (typeof savedGame.gold !== "undefined") gold = savedGame.gold;
+		if (typeof savedGame.level !== "undefined") level = savedGame.level;
+		if (typeof savedGame.points !== "undefined") points = savedGame.points;
+		if (typeof savedGame.strength !== "undefined") strength = savedGame.strength;
+		if (typeof savedGame.vitality !== "undefined") vitality = savedGame.vitality;
+		if (typeof savedGame.magic !== "undefined") magic = savedGame.magic;
+		if (typeof savedGame.agility !== "undefined") agility = savedGame.agility;
+		if (typeof savedGame.mana !== "undefined") mana = savedGame.mana;
+		if (typeof savedGame.maxmana !== "undefined") maxmana = savedGame.maxmana;
+		if (typeof savedGame.xp !== "undefined") xp = savedGame.xp;
+		if (typeof savedGame.xpreq !== "undefined") xpreq = savedGame.xpreq;
+}
+
+function saveGame() {
+	var gameSave = {
+		health: health,
+		maxhealth: maxhealth,
+		gold: gold,
+		level: level,
+		points: points,
+		strength: strength,
+		vitality: vitality,
+		magic: magic,
+		agility: agility,
+		mana: mana,
+		maxmana: mana,
+		xp: xp,
+		xpreq: xpreq
+	};
+	localStorage.setItem("gameSave", JSON.stringify(gameSave));
+}
+
+function resetSave() {
+	health = 25;
+	maxhealth = 25;
+	gold = 0;
+	level = 1;
+	points = 0;
+	xp = 0;
+	xpreq = 20;
+	strength = 1;
+	vitality = 1;
+	magic = 1;
+	agility = 1;
+	mana = 10;
+	maxmana = 10;
+	stage = 1;
+}
+
+	window.onload = function() {
+		loadGame();
+		document.getElementById("health").innerHTML = health;
+		document.getElementById("maxhealth").innerHTML = maxhealth;
+		document.getElementById("gold").innerHTML = gold;
+		document.getElementById("level").innerHTML = level;
+		document.getElementById("points").innerHTML = points;
+		document.getElementById("strength").innerHTML = strength;
+		document.getElementById("vitality").innerHTML = vitality;
+		document.getElementById("magic").innerHTML = magic;
+		document.getElementById("agility").innerHTML = agility;
+		document.getElementById("mana").innerHTML = mana;
+		document.getElementById("maxmana").innerHTML = maxmana;
+		document.getElementById("xp").innerHTML = xp;
+		document.getElementById("xpreq").innerHTML = xpreq;
+};
+	function previousStage() {
+		if (stage > 1) {
+			stage = stage - 1;
+			document.getElementById("stage").innerHTML = stage;
+		}};
+	
+	function nextStage() {
+			stage = stage + 1;
+			document.getElementById("stage").innerHTML = stage;
+		};
+	
+	function strengthUp() {
+		if (points > 0) {
+			strength = strength + 1;
+			points = points - 1;
+			document.getElementById("points").innerHTML = points;
+			}
+		}
+	function magicUp() {
+		if (points > 0) {
+			magic = magic + 1;
+			points = points - 1;
+			document.getElementById("points").innerHTML = points;
+			}
+		}
+	function vitalityUp() {
+		if (points > 0) {
+			vitality = vitality + 1;
+			points = points - 1;
+			document.getElementById("points").innerHTML = points;
+			}
+		}
+	function agilityUp() {
+		if (points > 0) {
+			agility = agility + 1;
+			points = points - 1;
+			document.getElementById("points").innerHTML = points;
+			}
+		}
+	
+	
+	setInterval(function() {
+		document.getElementById("health").innerHTML = health;
+		document.getElementById("maxhealth").innerHTML = maxhealth;
+		document.getElementById("gold").innerHTML = gold;
+		document.getElementById("level").innerHTML = level;
+		document.getElementById("points").innerHTML = points;	
+		document.getElementById("strength").innerHTML = strength;
+		document.getElementById("vitality").innerHTML = vitality;
+		document.getElementById("magic").innerHTML = magic;
+		document.getElementById("agility").innerHTML = agility;
+		document.getElementById("mana").innerHTML = mana;
+		document.getElementById("maxmana").innerHTML = maxmana;
+		document.getElementById("xp").innerHTML = xp;
+		document.getElementById("xpreq").innerHTML = xpreq;
+		
+		if (health > maxhealth) {
+		health = maxhealth;
+		}
+		
+		if (xpreq <= xp) {
+			xp = xp - xpreq;
+			xpreq = xpreq * 2;
+			level = level + 1;
+			points = points + 1;
+		}
+	}, 10);
+
+	setInterval(function() {
+		if (health < maxhealth) {
+			if (fighting == 1) {
+			health = health + vitality;
+			document.getElementById("health").innerHTML = health;
+			}
+			if (fighting ==0) {
+			health = health + vitality * 2;
+			document.getElementById("health").innerHTML = health;
+			}
+		}
+		if (mana < maxmana) {
+			if (fighting == 1) {
+			mana = mana + magic;
+			document.getElementById("mana").innerHTML = mana;
+			}
+			if (fighting ==0) {
+			mana = mana + magic * 2;
+			document.getElementById("mana").innerHTML = mana;
+			}
+		}
+	}, 1000);
+	
+	setInterval(function() {
+	if (fighting == 1) {
+			if (turn == 1) {
+				enemyhp = enemyhp - strength * 5
+				document.getElementById("enemyhp").innerHTML = enemyhp;
+				turn = 2
+			}
+			if (turn == 2) {
+				health = health - stage * 3
+				document.getElementById("health").innerHTML = health;
+				turn = 1
+			}
+			if (health <= 0) {
+				health = 0
+				fighting = 0
+			}
+			if (enemyhp <= 0) {
+				enemyhp = enemymaxhp;
+				xp = xp + stage * 5
+			}
+		}
+	if (fighting == 0) {
+			enemyhp = stage * 25;
+			enemymaxhp = enemyhp;
+			document.getElementById("enemyhp").innerHTML = enemyhp;
+			document.getElementById("enemymaxhp").innerHTML = enemymaxhp;
+		if (health == maxhealth) {
+			turn = 1
+			fighting = 1;
+			}
+		}
+	}, 1000);	
+		
+	setInterval(function() {
+		saveGame()
+	}, 1000);
+	
+	setInterval(function() {
+		maxhealth = vitality * 25;
+		maxmana = magic * 10;
+	}, 1000);
+	
+</script>
