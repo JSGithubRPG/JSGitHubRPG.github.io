@@ -268,9 +268,9 @@ function resetSave() {
 			}
 			}
 			if (turn == 2) {
-				if (enemyhp != 0) {
-				if (!(enemyhp < 0)) {
+				if (enemyhp =< 0) {
 				health = health - stage * 3
+				}
 				document.getElementById("health").innerHTML = health;
 				turn = 1
 				if (health <= 0) {
