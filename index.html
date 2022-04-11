@@ -203,7 +203,11 @@ function resetSave() {
 			}
 		}
 	
-	
+	function levelUp() {
+		xpreq = xpreq * 2;
+		level = level + 1;
+		points = points + 1;
+	}
 	setInterval(function() {
 		document.getElementById("health").innerHTML = health;
 		document.getElementById("maxhealth").innerHTML = maxhealth;
@@ -225,9 +229,7 @@ function resetSave() {
 		
 		if (xpreq <= xp) {
 			xp = xp - xpreq;
-			xpreq = xpreq * 2;
-			level = level + 1;
-			points = points + 1;
+			levelUp()
 		}
 	}, 10);
 
