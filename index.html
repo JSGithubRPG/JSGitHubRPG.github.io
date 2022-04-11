@@ -207,6 +207,7 @@ function resetSave() {
 		xpreq = xpreq * 2;
 		level = level + 1;
 		points = points + 1;
+		saveGame();
 	}
 	setInterval(function() {
 		document.getElementById("health").innerHTML = health;
