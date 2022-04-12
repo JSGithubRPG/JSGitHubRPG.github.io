@@ -137,7 +137,15 @@ const tooltiplist = [
 "Mana Regen is how much Mana you regenerate every <br> second. Mana Regen is multipled by 3 outside of combat."
 ];
 
+window.addEventListener('mousemove', function(event){
+    if (event.target.tagName === "HTML" || event.target.tagName === "BODY"){
+        resettip()
+    }
+});
 
+function resettip() {
+tooltips = "Hover your mouse over anything that confuses you <br> to get information about it!"
+}
 
 
 
