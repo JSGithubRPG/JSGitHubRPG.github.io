@@ -128,6 +128,7 @@ position: absolute;
 <img src="images/healingaura.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[15]" onClick="spellHealingAura()">
 <img src="images/fireblast.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[16]" onClick="spellFireBlast()">
 <img src="images/icespear.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[17]" onClick="spellIceSpear()">
+<img src="images/decayingtouch.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[18]" onClick="spellDecayingTouch()">
 </div>
 
 <script>
@@ -160,6 +161,8 @@ var mregenIndicator = " "
 var playerImage = "O<br>/|\\<br>/\\"
 var tooltips = "Hover your mouse over anything that confuses you <br> to get information about it!"
 
+const decay = [0, 0]
+
 const tooltiplist = [
 "Your level is a numeric value that goes up whenever <br> your XP is equivalent to the XP requirement. <br> Whenever you level up you gain 1 stat point.",
 "Health is how many hits you can take before dying.",
@@ -178,7 +181,8 @@ const tooltiplist = [
 "Gold is used to purchase stuff. You can obtain <br> gold through killing enemies.",
 "Healing Aura<br>Mana Cost: 10 Mana<br>Restores (Magic * 10) Health",
 "Fire Blast<br>Mana Cost: 50 Mana<br>Deals (Magic * 10) Fire Damage",
-"Ice Spear<br>Mana Cost: 150 Mana<br>Deals (Magic * 40) Ice Damage"
+"Ice Spear<br>Mana Cost: 150 Mana<br>Deals (Magic * 40) Ice Damage",
+"Decaying Touch<br>Mana Cost: 400 Mana<br>Deals (Magic * 5) Decaying Damage every second for (Magic / 5) seconds rounded down."
 ];
 
 window.addEventListener('mousemove', function(event){
@@ -481,5 +485,19 @@ function resetSave() {
 		mana = mana - 150
 		}
 	}
+	function spellDecayingTouch() {
+		if (mana >= 400) {
+		decay[0] = magic * 5
+		decay[1] = Math.floor(magic / 5)
+		mana = mana - 400
+		}
+	}
 	
+	
+	setInterval(function() {
+		if (decay[1] > 0) {
+			enemyhp = enemyhp - decay[0]
+			decay[1] = decay[1] - 1
+		}
+	}, 1000);
 </script>
