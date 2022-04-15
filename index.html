@@ -496,7 +496,7 @@ function resetSave() {
 	
 	setInterval(function() {
 		if (decay[1] > 0) {
-			enemyhp = enemyhp - decay[0]
+			enemyhp = Math.max(0, enemyhp - decay[0])
 			decay[1] = decay[1] - 1
 		}
 	}, 1000);
