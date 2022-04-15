@@ -66,7 +66,7 @@
 text-align: center;
 color: white;
 display: inline-block;
-left: 900px;
+left: 875px;
 top: 800px;
 position: absolute;
 }
@@ -127,6 +127,7 @@ position: absolute;
 <div class="skills">
 <img src="images/healingaura.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[15]" onClick="spellHealingAura()">
 <img src="images/fireblast.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[16]" onClick="spellFireBlast()">
+<img src="images/icespear.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[17]" onClick="spellIceSpear()">
 </div>
 
 <script>
@@ -176,7 +177,8 @@ const tooltiplist = [
 "Mana Regen is how much Mana you regenerate every <br> second. Mana Regen is multipled by 3 outside of combat.",
 "Gold is used to purchase stuff. You can obtain <br> gold through killing enemies.",
 "Healing Aura<br>Mana Cost: 10 Mana<br>Restores (Magic * 10) Health",
-"Fire Blast<br>Mana Cost: 50 Mana<br>Deals (Magic * 25) Damage"
+"Fire Blast<br>Mana Cost: 50 Mana<br>Deals (Magic * 10) Fire Damage",
+"Ice Spear<br>Mana Cost: 150 Mana<br>Deals (Magic * 40) Ice Damage"
 ];
 
 window.addEventListener('mousemove', function(event){
@@ -319,6 +321,7 @@ function resetSave() {
 		document.getElementById("xp").innerHTML = xp;
 		document.getElementById("xpreq").innerHTML = xpreq;
 		document.getElementById("stage").innerHTML = stage;
+		document.getElementById("enemyhp").innerHTML = enemyhp;
 		document.getElementById("enemyDamage").innerHTML = enemyDamage;
 		document.getElementById("hregen").innerHTML = hregen;
 		document.getElementById("mregen").innerHTML = mregen;
@@ -339,6 +342,10 @@ function resetSave() {
 			xp = xp - xpreq;
 			levelUp()
 		}
+		if (enemyhp == 0) {
+			enemyDeath()
+		}
+		
 		damage = strength * 5
 		hregen = vitality * 1
 		mregen = magic * 1
@@ -375,9 +382,6 @@ function resetSave() {
 			if (turn == 1) {
 				if (health > 0) {
 				enemyhp = Math.max(0, enemyhp - damage)
-				if (enemyhp == 0) {
-				enemyDeath()
-				}
 				document.getElementById("enemyhp").innerHTML = enemyhp;
 				turn = 2
 			}
@@ -465,8 +469,14 @@ function resetSave() {
 	}
 	function spellFireBlast() {
 		if (mana >= 50) {
-		enemyhp = enemyhp - magic * 25
+		enemyhp = Math.max(0, enemyhp - magic * 10)
 		mana = mana - 50
+		}
+	}
+	function spellIceSpear() {
+		if (mana >= 150) {
+		enemyhp = Math.max(0, enemyhp - magic * 40)
+		mana = mana - 150
 		}
 	}
 	
