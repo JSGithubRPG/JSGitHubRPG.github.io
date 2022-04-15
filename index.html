@@ -441,8 +441,10 @@ function resetSave() {
 	
 	setInterval(function() {
 		if (fighting == 0) {
+			if (enemymaxhp != stage * 25) {
 			enemyhp = stage * 25;
 			enemymaxhp = enemyhp;
+			}
 			document.getElementById("enemyhp").innerHTML = enemyhp;
 			document.getElementById("enemymaxhp").innerHTML = enemymaxhp;
 		if (health == maxhealth) {
