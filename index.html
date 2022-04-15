@@ -62,6 +62,15 @@
 	color: white;
 }
 
+.skills {
+text-align: center;
+color: white;
+display: inline-block;
+left: 940px;
+top: 800px;
+position: absolute;
+}
+
 </style>
 
 <body class="background">
@@ -71,8 +80,8 @@
 <button onClick="previousStage()"><-</button><span id="stage" style="color:white">1</span><button onClick="nextStage()">-></button><br><br>
 
 <div class="enemystats">
-<span id="enemyhp">25</span> / <span id="enemymaxhp">25</span>
-
+<span id="enemyhp">25</span> / <span id="enemymaxhp">25</span><br>
+<p>Damage = <span id="enemyDamage">1</span></p>
 </div></div>
 <div class="text">
 <div class="stats">	
@@ -100,7 +109,7 @@
 </div>
 
 <div class="hud">
-<p style="color:white" style="padding-left:48px" onmouseover="tooltips = tooltiplist[0]">Level <span id="level">1</span></p><p style="color:white"><span id="gold">0</span> Gold</p>
+<p style="color:white" style="padding-left:48px" onmouseover="tooltips = tooltiplist[0]">Level <span id="level">1</span></p><p style="color:white" onmouseover="tooltips = tooltiplist[14]"><span id="gold">0</span> Gold</p>
 <p style="color:white" style="padding-right: 10px"></p>
 <p style="color:white" onmouseover="tooltips = tooltiplist[1]"><span id="health">25</span>/<span id="maxhealth">25</span> Health</p>
 <p style="color:white" onmouseover="tooltips = tooltiplist[2]"><span id="mana">10</span>/<span id="maxmana">10</span> Mana</p>
@@ -110,9 +119,12 @@
 <div class="regenstuff">
 <br><br><br><br><br><br><br><br><br><br><br><br>
 <p style="color:red" style="padding-left:12px"><span id="damageIndicator"> </span></p>
-<p style="color:green" style="padding-left:12px"><span id="hregenIndicator"> </span></p>
-<p style="color:blue" style="padding-left:12px"><span id="mregenIndicator"> </span></p>
+<p style="color:lime" style="padding-left:12px"><span id="hregenIndicator"> </span></p>
+<p style="color:aqua" style="padding-left:12px"><span id="mregenIndicator"> </span></p>
 </div>
+
+
+<div class="skills"><img src="images/healing.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[15]" onClick="spellHealingAura()"></div>
 
 <script>
 var health = 25
@@ -158,7 +170,10 @@ const tooltiplist = [
 "Stat Points are the currency require to upgrade <br> your stats. Stat Points are obtained through leveling up.",
 "Damage is how much you lower the enemies health each time you do a melee attack. It is equivalent to Strength * 5.",
 "Health Regen is how much Health you regenerate <br> every second. Health Regen is multiplied by 3 outside of combat.",
-"Mana Regen is how much Mana you regenerate every <br> second. Mana Regen is multipled by 3 outside of combat."
+"Mana Regen is how much Mana you regenerate every <br> second. Mana Regen is multipled by 3 outside of combat.",
+"Gold is used to purchase stuff. You can obtain <br> gold through killing enemies.",
+"Healing Aura<br>Mana Cost: 10 Mana<br>Restores (Magic * 10) Health"
+
 ];
 
 window.addEventListener('mousemove', function(event){
@@ -301,6 +316,7 @@ function resetSave() {
 		document.getElementById("xp").innerHTML = xp;
 		document.getElementById("xpreq").innerHTML = xpreq;
 		document.getElementById("stage").innerHTML = stage;
+		document.getElementById("enemyDamage").innerHTML = enemyDamage;
 		document.getElementById("hregen").innerHTML = hregen;
 		document.getElementById("mregen").innerHTML = mregen;
 		document.getElementById("tooltips").innerHTML = tooltips;
@@ -379,7 +395,7 @@ function resetSave() {
 		enemyhp = stage * 25;
 		xp = xp + stage * 15
 	}
-	
+			
 	function damageTaken() {
 		damageIndicator = enemyDamage
 		if (health != 0) {
@@ -391,11 +407,19 @@ function resetSave() {
 	}
 	setInterval(function() {
 		if (fighting == 0) {
-		mregenIndicator = mana * 3
+		if (mana != maxmana) {
+		mregenIndicator = magic * 3
+		}
+		if (health != maxhealth) {
 		hregenIndicator = vitality * 3
+		}
 		} else if (fighting == 1) {
-		mregenIndicator = mana
+		if (mana != maxmana) {
+		mregenIndicator = magic
+		}
+		if (health != maxhealth) {
 		hregenIndicator = vitality
+		}
 		}
 	}, 500);
 	
@@ -403,7 +427,7 @@ function resetSave() {
 		damageIndicator = " "
 		hregenIndicator = " "
 		mregenIndicator = " "
-	}, 1500);
+	}, 751);
 	
 	setInterval(function() {
 		if (fighting == 0) {
@@ -426,5 +450,10 @@ function resetSave() {
 		maxmana = magic * 10;
 	}, 1000);
 	
-	
+	function spellHealingAura() {
+		if (mana >= 10) {
+		health = health + magic * 10
+		mana = mana - 10
+		}
+	}
 </script>
