@@ -66,7 +66,7 @@
 text-align: center;
 color: white;
 display: inline-block;
-left: 940px;
+left: 900px;
 top: 800px;
 position: absolute;
 }
@@ -124,7 +124,10 @@ position: absolute;
 </div>
 
 
-<div class="skills"><img src="images/healing.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[15]" onClick="spellHealingAura()"></div>
+<div class="skills">
+<img src="images/healingaura.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[15]" onClick="spellHealingAura()">
+<img src="images/fireblast.png" width="72px" height="72px" onmouseover="tooltips = tooltiplist[16]" onClick="spellFireBlast()">
+</div>
 
 <script>
 var health = 25
@@ -172,8 +175,8 @@ const tooltiplist = [
 "Health Regen is how much Health you regenerate <br> every second. Health Regen is multiplied by 3 outside of combat.",
 "Mana Regen is how much Mana you regenerate every <br> second. Mana Regen is multipled by 3 outside of combat.",
 "Gold is used to purchase stuff. You can obtain <br> gold through killing enemies.",
-"Healing Aura<br>Mana Cost: 10 Mana<br>Restores (Magic * 10) Health"
-
+"Healing Aura<br>Mana Cost: 10 Mana<br>Restores (Magic * 10) Health",
+"Fire Blast<br>Mana Cost: 50 Mana<br>Deals (Magic * 25) Damage"
 ];
 
 window.addEventListener('mousemove', function(event){
@@ -453,10 +456,18 @@ function resetSave() {
 		maxmana = magic * 10;
 	}, 1000);
 	
+	//SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS 
 	function spellHealingAura() {
 		if (mana >= 10) {
 		health = health + magic * 10
 		mana = mana - 10
 		}
 	}
+	function spellFireBlast() {
+		if (mana >= 50) {
+		enemyhp = enemyhp - magic * 25
+		mana = mana - 50
+		}
+	}
+	
 </script>
