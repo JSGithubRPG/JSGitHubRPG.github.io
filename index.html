@@ -50,6 +50,14 @@
 	left: 900px;
 	position: absolute;
 }
+
+.regenstuff {
+	text-align: center;
+	top: 20px;
+	font-size: 24px;
+	left: 900px;
+	position: absolute;
+}
 .text {
 	color: white;
 }
@@ -92,13 +100,19 @@
 </div>
 
 <div class="hud">
-<p style="color:white" style="padding-left:48px" onmouseover="tooltips = tooltiplist[0]">Level <span id="level">1</span></p><p><span id="gold">0</span> Gold</p>
+<p style="color:white" style="padding-left:48px" onmouseover="tooltips = tooltiplist[0]">Level <span id="level">1</span></p><p style="color:white"><span id="gold">0</span> Gold</p>
 <p style="color:white" style="padding-right: 10px"></p>
 <p style="color:white" onmouseover="tooltips = tooltiplist[1]"><span id="health">25</span>/<span id="maxhealth">25</span> Health</p>
 <p style="color:white" onmouseover="tooltips = tooltiplist[2]"><span id="mana">10</span>/<span id="maxmana">10</span> Mana</p>
-<p style="color:white" onmouseover="tooltips = tooltiplist[3]"><span id="xp">0</span>/<span id="xpreq">20</span> XP</p>
+<p style="color:white" onmouseover="tooltips = tooltiplist[3]"><span id="xp">0</span>/<span id="xpreq">20</span> XP</p><br><br><br><br>
+<pre><p style="color:white"><span id="playerImage" style="font-size:48px">O<br>/|\<br>/\</span></p></pre>
 </div>
-
+<div class="regenstuff">
+<br><br><br><br><br><br><br><br><br><br><br><br>
+<p style="color:red" style="padding-left:12px"><span id="damageIndicator"> </span></p>
+<p style="color:green" style="padding-left:12px"><span id="hregenIndicator"> </span></p>
+<p style="color:blue" style="padding-left:12px"><span id="mregenIndicator"> </span></p>
+</div>
 
 <script>
 var health = 25
@@ -119,10 +133,15 @@ var fighting = 0
 var turn = 1
 var enemyhp = 25
 var enemymaxhp = 25
+var enemyDamage = 3
 var points = 0
 var attackspeed = 1
 var hregen = 1
 var mregen = 1
+var damageIndicator = " "
+var hregenIndicator = " "
+var mregenIndicator = " "
+var playerImage = "O<br>/|\\<br>/\\"
 var tooltips = "Hover your mouse over anything that confuses you <br> to get information about it!"
 
 const tooltiplist = [
@@ -285,6 +304,10 @@ function resetSave() {
 		document.getElementById("hregen").innerHTML = hregen;
 		document.getElementById("mregen").innerHTML = mregen;
 		document.getElementById("tooltips").innerHTML = tooltips;
+		document.getElementById("playerImage").innerHTML = playerImage;
+		document.getElementById("damageIndicator").innerHTML = damageIndicator;
+		document.getElementById("hregenIndicator").innerHTML = hregenIndicator;
+		document.getElementById("mregenIndicator").innerHTML = mregenIndicator;
 		
 		if (health > maxhealth) {
 		health = maxhealth;
@@ -297,16 +320,19 @@ function resetSave() {
 		damage = strength * 5
 		hregen = vitality * 1
 		mregen = magic * 1
+		enemyDamage = stage * 3
 	}, 10);
 
 	setInterval(function() {
 		if (health < maxhealth) {
 			if (fighting == 1) {
 			health = health + vitality;
+			hregenIndicator = vitality;
 			document.getElementById("health").innerHTML = health;
 			}
 			if (fighting ==0) {
 			health = health + vitality * 3;
+			hregenIndicator = vitality * 3;
 			document.getElementById("health").innerHTML = health;
 			}
 		}
@@ -327,26 +353,57 @@ function resetSave() {
 			if (turn == 1) {
 				if (health > 0) {
 				enemyhp = Math.max(0, enemyhp - damage)
-				document.getElementById("enemyhp").innerHTML = enemyhp;
-				if (enemyhp <= 0) {
-				enemyhp = 25;
-				xp = xp + stage * 15
+				if (enemyhp == 0) {
+				enemyDeath()
 				}
+				document.getElementById("enemyhp").innerHTML = enemyhp;
 				turn = 2
 			}
 			}
-			if (enemyhp > 0) {
-				health = Math.max(0, health - stage * 3)
+			if (turn == 2) {
+				if (enemyhp > 0) {
+				health = Math.max(0, health - enemyDamage)
+				if (health != 0) {
+				damageTaken()
+				}
 				document.getElementById("health").innerHTML = health;
 				}
 				turn = 1
-				if (health <= 0) {
-				health = 0
+				if (health == 0) {
 				fighting = 0
 				turn = 1
-				}}
+				}}}
 	}, 1000);
 
+	function enemyDeath() {
+		enemyhp = stage * 25;
+		xp = xp + stage * 15
+	}
+	
+	function damageTaken() {
+		damageIndicator = enemyDamage
+		if (health != 0) {
+		playerImage = " O<br> /|\\<br> /\\"
+		setTimeout(playerAnimation1, 100)}
+	}
+	function playerAnimation1() {
+		playerImage = "O<br>/|\\<br>/\\"
+	}
+	setInterval(function() {
+		if (fighting == 0) {
+		mregenIndicator = mana * 3
+		hregenIndicator = vitality * 3
+		} else if (fighting == 1) {
+		mregenIndicator = mana
+		hregenIndicator = vitality
+		}
+	}, 500);
+	
+	setInterval(function() {
+		damageIndicator = " "
+		hregenIndicator = " "
+		mregenIndicator = " "
+	}, 1500);
 	
 	setInterval(function() {
 		if (fighting == 0) {
@@ -355,7 +412,7 @@ function resetSave() {
 			document.getElementById("enemyhp").innerHTML = enemyhp;
 			document.getElementById("enemymaxhp").innerHTML = enemymaxhp;
 		if (health == maxhealth) {
-			turn = 1
+			turn = 2
 			fighting = 1;
 			}}
 		}, 100);
