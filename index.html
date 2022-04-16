@@ -161,7 +161,9 @@ var mregenIndicator = " "
 var playerImage = "O<br>/|\\<br>/\\"
 var tooltips = "Hover your mouse over anything that confuses you <br> to get information about it!"
 
-const decay = [0, 0]
+const decay = [0, 0];
+
+const xpgain = [0, 15, 30];
 
 const tooltiplist = [
 "Your level is a numeric value that goes up whenever <br> your XP is equivalent to the XP requirement. <br> Whenever you level up you gain 1 stat point.",
@@ -214,6 +216,7 @@ function loadGame() {
 		if (typeof savedGame.xp !== "undefined") xp = savedGame.xp;
 		if (typeof savedGame.xpreq !== "undefined") xpreq = savedGame.xpreq;
 		if (typeof savedGame.stage !== "undefined") stage = savedGame.stage;
+		if (typeof savedGame.xpgain !== "undefined") xpgain = savedGame.xpgain;
 }
 
 function saveGame() {
@@ -232,7 +235,8 @@ function saveGame() {
 		maxmana: mana,
 		xp: xp,
 		xpreq: xpreq,
-		stage: stage
+		stage: stage,
+		xpgain: xpgain
 	};
 	localStorage.setItem("gameSave", JSON.stringify(gameSave));
 }
@@ -253,6 +257,7 @@ function resetSave() {
 	mana = 10;
 	maxmana = 10;
 	stage = 1;
+	xpgain = [0, 15, 30];
 }
 
 	window.onload = function() {
@@ -264,6 +269,7 @@ function resetSave() {
 			document.getElementById("stage").innerHTML = stage;
 			fighting = 0
 			turn = 1
+			xpgain.pop()
 		}};
 	
 	function nextStage() {
@@ -271,6 +277,9 @@ function resetSave() {
 			document.getElementById("stage").innerHTML = stage;
 			fighting = 0
 			turn = 1
+			if (stage > 2) {
+				xpgain.push(xpgain[xpgain.length - 2] + xpgain[xpgain.length - 1])
+			}
 		};
 	
 	function strengthUp() {
@@ -407,9 +416,9 @@ function resetSave() {
 
 	function enemyDeath() {
 		enemyhp = stage * 25;
-		xp = xp + stage * 15
+		xp = xp + xpgain[1]
 	}
-			
+	
 	function damageTaken() {
 		damageIndicator = enemyDamage
 		if (health != 0) {
