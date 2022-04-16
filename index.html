@@ -81,7 +81,8 @@ position: absolute;
 
 <div class="enemystats">
 <span id="enemyhp">25</span> / <span id="enemymaxhp">25</span><br>
-<p>Damage = <span id="enemyDamage">1</span></p>
+<p>Damage = <span id="enemydamage">1</span></p>
+<p>XP Drop = <span id="enemyxp">25</span></p>
 </div></div>
 <div class="text">
 <div class="stats">	
@@ -150,7 +151,8 @@ var fighting = 0
 var turn = 1
 var enemyhp = 25
 var enemymaxhp = 25
-var enemyDamage = 3
+var enemydamage = 3
+var enemyxp = 25
 var points = 0
 var attackspeed = 1
 var hregen = 1
@@ -160,6 +162,7 @@ var hregenIndicator = " "
 var mregenIndicator = " "
 var playerImage = "O<br>/|\\<br>/\\"
 var tooltips = "Hover your mouse over anything that confuses you <br> to get information about it!"
+
 
 const decay = [0, 0];
 
@@ -332,7 +335,8 @@ function resetSave() {
 		document.getElementById("xpreq").innerHTML = xpreq;
 		document.getElementById("stage").innerHTML = stage;
 		document.getElementById("enemyhp").innerHTML = enemyhp;
-		document.getElementById("enemyDamage").innerHTML = enemyDamage;
+		document.getElementById("enemydamage").innerHTML = enemydamage;
+		document.getElementById("enemyxp").innerHTML = enemyxp;
 		document.getElementById("hregen").innerHTML = hregen;
 		document.getElementById("mregen").innerHTML = mregen;
 		document.getElementById("tooltips").innerHTML = tooltips;
@@ -359,7 +363,8 @@ function resetSave() {
 		damage = strength * 5
 		hregen = vitality * 1
 		mregen = magic * 1
-		enemyDamage = stage * 3
+		enemydamage = stage * 3
+		enemyxp = xpgain[xpgain.length - 2]
 	}, 10);
 
 	setInterval(function() {
@@ -398,7 +403,7 @@ function resetSave() {
 			}
 			if (turn == 2) {
 				if (enemyhp > 0) {
-				health = Math.max(0, health - enemyDamage)
+				health = Math.max(0, health - enemydamage)
 				if (health != 0) {
 				damageTaken()
 				}
@@ -417,7 +422,7 @@ function resetSave() {
 	}
 	
 	function damageTaken() {
-		damageIndicator = enemyDamage
+		damageIndicator = enemydamage
 		if (health != 0) {
 		playerImage = " O<br> /|\\<br> /\\"
 		setTimeout(playerAnimation1, 100)}
