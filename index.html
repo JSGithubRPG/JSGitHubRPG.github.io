@@ -313,7 +313,7 @@ function resetSave() {
 		}
 	
 	function levelUp() {
-		xpreq = xpreq * 2;
+		xpreq = Math.round(xpreq * 1.5);
 		level = level + 1;
 		points = points + 1;
 		saveGame();
