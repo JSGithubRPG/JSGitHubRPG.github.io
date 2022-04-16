@@ -498,8 +498,8 @@ function resetSave() {
 	}
 	function spellDecayingTouch() {
 		if (mana >= 400) {
-		decay[0] = magic * 5
-		decay[1] = Math.floor(magic / 5)
+		decay[0] = decay[0] + magic * 5
+		decay[1] = decay[1] + Math.floor(magic / 5)
 		mana = mana - 400
 		}
 	}
