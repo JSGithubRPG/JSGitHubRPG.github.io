@@ -96,7 +96,8 @@ position: absolute;
 <p style="color:white" onMouseOver="tooltips = tooltiplist[9]"><span id="agility">1</span> Agility </p><button onClick="agilityUp()">+</button>
 <img style="padding-right: 12px" src="images/agility.png" height="36px" width="36px" onMouseOver="tooltips = tooltiplist[9]">
 <br><br><br>
-<span id="points" style="font-size:18px" onMouseOver="tooltips = tooltiplist[10]">0</span> Stat Points
+<span id="points" style="font-size:18px" onMouseOver="tooltips = tooltiplist[10]">0</span> Stat Points<br><br>
+<button onClick="refundPoints()">Refund SP (1000 Gold)</button>
 <div class="stats2">
 <br><br>
 <p onMouseOver="tooltips = tooltiplist[11]">Damage = <span id="damage">5</span></p>
@@ -189,6 +190,7 @@ const tooltiplist = [
 ];
 
 const xpgain = [0, 25, 50];
+const goldgain = [0, 50, 100];
 
 
 window.addEventListener('mousemove', function(event){
@@ -270,6 +272,7 @@ function resetSave() {
 			fighting = 0
 			turn = 1
 			xpgain.pop()
+			goldgain.pop()
 		}};
 	
 	function nextStage() {
@@ -279,8 +282,20 @@ function resetSave() {
 			turn = 1
 			if (stage > 1) {
 				xpgain.push(xpgain[xpgain.length - 2] + xpgain[xpgain.length - 1])
+				goldgain.push(goldgain[goldgain.length - 2] + goldgain[goldgain.length - 1])
 			}
 		};
+	
+	function refundPoints() {
+		if (gold >= 1000) {
+			gold = gold - 1000
+			points = points + (level - 1)
+			strength = 1
+			magic = 1
+			vitality = 1
+			agility = 1
+		}
+	}
 	
 	function strengthUp() {
 		if (points > 0) {
@@ -428,6 +443,7 @@ function resetSave() {
 	function enemyDeath() {
 		enemyhp = stage * 25;
 		xp = xp + xpgain[xpgain.length - 2]
+		gold = gold + goldgain[xpgain.length - 2]
 	}
 	
 	function damageTaken() {
