@@ -71,9 +71,32 @@ top: 800px;
 position: absolute;
 }
 
+#shop {
+	background-color: rgb(77, 77, 77);
+	border-radius: 5px;
+	text-align: center;
+	color: white;
+	display: inline-block;
+	left: 935px;
+	top: 500px;
+	position: absolute;
+	z-index: -999;
+}
+
 </style>
 
 <body class="background">
+<button onclick="displayShop()">Shop</button>
+
+
+	
+<div id="shop" style="display:none" onmouseover="tooltips = tooltiplist[19]">
+<p style="font-weight:bold" style="font-size:128px"> &nbsp;SHOP&nbsp; </p>
+<p> &nbsp;The Shop Is Empty.&nbsp; </p>
+<p> &nbsp;Wait for new update.&nbsp; </p>
+</div>
+
+
 
 <div class="area" onmouseover="tooltips = tooltiplist[4]">
 
@@ -186,7 +209,8 @@ const tooltiplist = [
 "Healing Aura<br>Mana Cost: 10 Mana<br>Restores (Magic * 10) Health",
 "Fire Blast<br>Mana Cost: 50 Mana<br>Deals (Magic * 10) Fire Damage",
 "Ice Spear<br>Mana Cost: 150 Mana<br>Deals (Magic * 40) Ice Damage",
-"Decaying Touch<br>Mana Cost: 400 Mana<br>Deals (Magic * 5) Decaying Damage every second for (Magic / 5) seconds rounded down."
+"Decaying Touch<br>Mana Cost: 400 Mana<br>Deals (Magic * 5) Decaying Damage every second for (Magic / 5) seconds rounded down.",
+"Shop for stuff"
 ];
 
 const xpgain = [0, 25, 50];
@@ -536,4 +560,15 @@ function resetSave() {
 			decay[1] = decay[1] - 1
 		}
 	}, 1000);
+
+
+	function displayShop() {
+		if (document.getElementById("shop").style.display == 'none') {
+		document.getElementById('shop').style.display = 'block';
+		document.getElementById('shop').style.zIndex = "100";
+		} else if (document.getElementById("shop").style.display == 'block') {
+		document.getElementById('shop').style.display = 'none';
+		document.getElementById('shop').style.zIndex = "-999";
+		}
+	}
 </script>
