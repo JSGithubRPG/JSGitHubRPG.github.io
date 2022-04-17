@@ -83,6 +83,20 @@ position: absolute;
 	z-index: -999;
 }
 
+.shopButton {
+	background-color: #EEEEEE;
+	transition: all .2s ease-in-out;
+	border-radius: 25px;
+	width: 100%;
+	margin: 10px 0px 10px 0px;
+}
+			
+.shopButton:hover {
+	background-color: #DDDDDD	;
+	transition: all .2s ease-in-out;
+}
+
+
 </style>
 
 <body class="background">
@@ -92,7 +106,13 @@ position: absolute;
 	
 <div id="shop" style="display:none" onmouseover="tooltips = tooltiplist[19]">
 <p style="font-weight:bold" style="font-size:128px"> &nbsp;SHOP&nbsp; </p>
-<p> &nbsp;The Shop Is Empty.&nbsp; </p>
+	<table class="shopButton" onclick="buyPoint()">
+		<tbody><tr>
+			<td id="nameAndCost">
+				<p style="text-align:center">SP</p>
+				<p style="text-align:center">&nbsp;<span id="pointcost">10000</span> Gold</p></td>
+		</tr>
+	</tbody></table>
 <p> &nbsp;Wait for new update.&nbsp; </p>
 </div>
 
@@ -187,6 +207,8 @@ var mregenIndicator = " "
 var playerImage = "O<br>/|\\<br>/\\"
 var tooltips = "Hover your mouse over anything that confuses you <br> to get information about it!"
 
+var pointcost = 10000
+
 
 const decay = [0, 0];
 
@@ -245,6 +267,7 @@ function loadGame() {
 		if (typeof savedGame.maxmana !== "undefined") maxmana = savedGame.maxmana;
 		if (typeof savedGame.xp !== "undefined") xp = savedGame.xp;
 		if (typeof savedGame.xpreq !== "undefined") xpreq = savedGame.xpreq;
+		if (typeof savedGame.pointcost !== "undefined") pointcost = savedGame.pointcost;
 }
 
 function saveGame() {
@@ -262,7 +285,8 @@ function saveGame() {
 		mana: mana,
 		maxmana: mana,
 		xp: xp,
-		xpreq: xpreq
+		xpreq: xpreq,
+		pointcost: pointcost
 	};
 	localStorage.setItem("gameSave", JSON.stringify(gameSave));
 }
@@ -392,6 +416,7 @@ function resetSave() {
 		document.getElementById("damageIndicator").innerHTML = damageIndicator;
 		document.getElementById("hregenIndicator").innerHTML = hregenIndicator;
 		document.getElementById("mregenIndicator").innerHTML = mregenIndicator;
+		document.getElementById("pointcost").innerHTML = pointcost;
 		
 		if (health > maxhealth) {
 		health = maxhealth;
@@ -561,7 +586,7 @@ function resetSave() {
 		}
 	}, 1000);
 
-
+	//SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP SHOP 
 	function displayShop() {
 		if (document.getElementById("shop").style.display == 'none') {
 		document.getElementById('shop').style.display = 'block';
@@ -570,5 +595,14 @@ function resetSave() {
 		document.getElementById('shop').style.display = 'none';
 		document.getElementById('shop').style.zIndex = "-999";
 		}
+	}
+	
+	function buyPoint() {
+		if (gold >= pointcost) {
+			points = points + 1;
+			gold = gold - pointcost;
+			pointcost = pointcost * 2
+		}
+		
 	}
 </script>
