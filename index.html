@@ -113,6 +113,13 @@ position: absolute;
 				<p style="text-align:center">&nbsp;<span id="pointcost">10000</span> Gold</p></td>
 		</tr>
 	</tbody></table>
+	<table class="shopButton" onclick="buySword()">
+		<tbody><tr>
+			<td id="nameAndCost">
+				<p style="text-align:center">Sword</p>
+				<span id="swordthingy" style="text-align:center">&nbsp;100000 Gold</span></td>
+		</tr>
+	</tbody></table>
 <p> &nbsp;Wait for new update.&nbsp; </p>
 </div>
 
@@ -209,6 +216,9 @@ var tooltips = "Hover your mouse over anything that confuses you <br> to get inf
 
 var pointcost = 10000
 
+var sword = 0
+var swordthingy = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100000 Gold"
+
 
 const decay = [0, 0];
 
@@ -232,7 +242,8 @@ const tooltiplist = [
 "Fire Blast<br>Mana Cost: 50 Mana<br>Deals (Magic * 10) Fire Damage",
 "Ice Spear<br>Mana Cost: 150 Mana<br>Deals (Magic * 40) Ice Damage",
 "Decaying Touch<br>Mana Cost: 400 Mana<br>Deals (Magic * 5) Decaying Damage every second for (Magic / 5) seconds rounded down.",
-"Shop for stuff"
+"One Stat Point. Price multiples by 2 every purchase.",
+"A standard Sword. Doubles melee damage. Maximum of one purchase."
 ];
 
 const xpgain = [0, 25, 50];
@@ -268,6 +279,8 @@ function loadGame() {
 		if (typeof savedGame.xp !== "undefined") xp = savedGame.xp;
 		if (typeof savedGame.xpreq !== "undefined") xpreq = savedGame.xpreq;
 		if (typeof savedGame.pointcost !== "undefined") pointcost = savedGame.pointcost;
+		if (typeof savedGame.sword !== "undefined") sword = savedGame.sword;
+		if (typeof savedGame.swordthingy !== "undefined") swordthingy = savedGame.swordthingy;
 }
 
 function saveGame() {
@@ -286,7 +299,9 @@ function saveGame() {
 		maxmana: mana,
 		xp: xp,
 		xpreq: xpreq,
-		pointcost: pointcost
+		pointcost: pointcost,
+		sword: sword,
+		swordthingy: swordthingy
 	};
 	localStorage.setItem("gameSave", JSON.stringify(gameSave));
 }
@@ -306,8 +321,9 @@ function resetSave() {
 	agility = 1;
 	mana = 10;
 	maxmana = 10;
-	stage = 1;
+	stage = 1
 	xpgain = [0, 15, 30];
+	sword = 0
 }
 
 	window.onload = function() {
@@ -417,6 +433,7 @@ function resetSave() {
 		document.getElementById("hregenIndicator").innerHTML = hregenIndicator;
 		document.getElementById("mregenIndicator").innerHTML = mregenIndicator;
 		document.getElementById("pointcost").innerHTML = pointcost;
+		document.getElementById("swordthingy").innerHTML = swordthingy;
 		
 		if (health > maxhealth) {
 		health = maxhealth;
@@ -469,7 +486,11 @@ function resetSave() {
 	if (fighting == 1) {
 			if (turn == 1) {
 				if (health > 0) {
+				if (sword == 0) {
 				enemyhp = Math.max(0, enemyhp - damage)
+				} else if (sword == 1) {
+				enemyhp = Math.max(0, enemyhp - damage * 2)
+				}
 				document.getElementById("enemyhp").innerHTML = enemyhp;
 				turn = 2
 			}
@@ -604,5 +625,17 @@ function resetSave() {
 			pointcost = pointcost * 2
 		}
 		
+	}
+	
+	function buySword() {
+		if (gold >= 100000) {
+			if (sword != 1) {
+				sword = sword + 1
+				gold = gold - 100000
+				swordthingy = "&nbsp;&nbsp;Already Purchased"
+				document.getElementById("swordthingy").innerHTML = swordthingy;
+			}
+		}
+	
 	}
 </script>
