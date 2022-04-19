@@ -120,6 +120,13 @@ position: absolute;
 				<span id="swordthingy" style="text-align:center">&nbsp;100000 Gold</span></td>
 		</tr>
 	</tbody></table>
+	<table class="shopButton" onclick="buyStaff()" onmouseover="tooltips = tooltiplist[21]">
+		<tbody><tr>
+			<td id="nameAndCost">
+				<p style="text-align:center">Staff</p>
+				<span id="staffthingy" style="text-align:center">&nbsp;100000 Gold</span></td>
+		</tr>
+	</tbody></table>
 <p> &nbsp;Wait for new update.&nbsp; </p>
 </div>
 
@@ -218,7 +225,8 @@ var pointcost = 10000
 
 var sword = 0
 var swordthingy = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100000 Gold"
-
+var staff = 0
+var staffthingy = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100000 Gold"
 
 const decay = [0, 0];
 
@@ -238,12 +246,13 @@ const tooltiplist = [
 "Health Regen is how much Health you regenerate <br> every second. Health Regen is multiplied by 3 outside of combat.",
 "Mana Regen is how much Mana you regenerate every <br> second. Mana Regen is multipled by 3 outside of combat.",
 "Gold is used to purchase stuff. You can obtain <br> gold through killing enemies.",
-"Healing Aura<br>Mana Cost: 10 Mana<br>Restores (Magic * 10) Health",
-"Fire Blast<br>Mana Cost: 50 Mana<br>Deals (Magic * 10) Fire Damage",
-"Ice Spear<br>Mana Cost: 150 Mana<br>Deals (Magic * 40) Ice Damage",
-"Decaying Touch<br>Mana Cost: 400 Mana<br>Deals (Magic * 5) Decaying Damage every second for (Magic / 5) seconds rounded down.",
+"Healing Aura<br>Mana Cost: 10 Mana<br>Restores (Magic * 10) Health<br><br>Heals double health if you have bought Staff",
+"Fire Blast<br>Mana Cost: 50 Mana<br>Deals (Magic * 10) Fire Damage<br><br>Deals double damage if you have bought Staff",
+"Ice Spear<br>Mana Cost: 150 Mana<br>Deals (Magic * 40) Ice Damage<br><br>Deals double damage if you have bought Staff",
+"Decaying Touch<br>Mana Cost: 400 Mana<br>Deals (Magic * 5) Decaying Damage <br>every second for (Magic / 5) seconds rounded down.<br><br>Deals double damage and has double <br>duration if you have bought Staff",
 "One Stat Point. Price multiples by 2 every purchase.",
-"A standard Sword. Doubles melee damage.<br>Maximum of one purchase."
+"A standard Sword. Doubles melee damage.<br>Maximum of one purchase.",
+"A standard Staff. Doubles spell power.<br>Maximum of one purchase."
 ];
 
 const xpgain = [0, 25, 50];
@@ -281,6 +290,8 @@ function loadGame() {
 		if (typeof savedGame.pointcost !== "undefined") pointcost = savedGame.pointcost;
 		if (typeof savedGame.sword !== "undefined") sword = savedGame.sword;
 		if (typeof savedGame.swordthingy !== "undefined") swordthingy = savedGame.swordthingy;
+		if (typeof savedGame.staff !== "undefined") staff = savedGame.staff;
+		if (typeof savedGame.staffthingy !== "undefined") staffthingy = savedGame.staffthingy;
 }
 
 function saveGame() {
@@ -301,7 +312,9 @@ function saveGame() {
 		xpreq: xpreq,
 		pointcost: pointcost,
 		sword: sword,
-		swordthingy: swordthingy
+		swordthingy: swordthingy,
+		staff: staff,
+		staffthingy: staffthingy
 	};
 	localStorage.setItem("gameSave", JSON.stringify(gameSave));
 }
@@ -324,6 +337,9 @@ function resetSave() {
 	stage = 1
 	xpgain = [0, 15, 30];
 	sword = 0
+	swordthingy = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100000 Gold"
+	staff = 0
+	staffthingy = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100000 Gold"
 }
 
 	window.onload = function() {
@@ -390,19 +406,17 @@ function resetSave() {
 			document.getElementById("points").innerHTML = points;
 			}
 		}
-	
-	function levelUp() {
-		xp = xp - xpreq;
+	function levelUp() {	
 		xpreq = Math.round(xpreq * 1.5);
 		level = level + 1;
 		points = points + 2;
-		if (level = 7) {
+		if (level == 7) {
 		xp = 0
-		} else if (level = 6) {
+		} else if (level == 6) {
 		xp = 0
-		} else if (level = 5) {
+		} else if (level == 5) {
 		xp = 0
-		} else if (level = 4) {
+		} else if (level == 4) {
 		xp = 0
 		}
 		saveGame();
@@ -435,6 +449,7 @@ function resetSave() {
 		document.getElementById("mregenIndicator").innerHTML = mregenIndicator;
 		document.getElementById("pointcost").innerHTML = pointcost;
 		document.getElementById("swordthingy").innerHTML = swordthingy;
+		document.getElementById("staffthingy").innerHTML = staffthingy;
 		
 		if (health > maxhealth) {
 		health = maxhealth;
@@ -443,7 +458,7 @@ function resetSave() {
 		mana = maxmana;
 		}
 		
-		if (xpreq <= xp) {
+		if (xp >= xpreq) {
 			xp = xp - xpreq;
 			levelUp()
 		}
@@ -576,26 +591,43 @@ function resetSave() {
 	//SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS SPELLS 
 	function spellHealingAura() {
 		if (mana >= 10) {
+		if (staff == 0) {
 		health = health + magic * 10
+		} else if (staff == 1) {
+		health = health + magic * 10 * 2
+		}
 		mana = mana - 10
 		}
 	}
 	function spellFireBlast() {
 		if (mana >= 50) {
+		if (staff == 0) {
 		enemyhp = Math.max(0, enemyhp - magic * 10)
+		} else if (staff == 1) {
+		enemyhp = Math.max(0, enemyhp - magic * 10 * 2)
+		}
 		mana = mana - 50
 		}
 	}
 	function spellIceSpear() {
 		if (mana >= 150) {
+		if (staff == 0) {
 		enemyhp = Math.max(0, enemyhp - magic * 40)
+		} else if (staff == 1) {
+		enemyhp = Math.max(0, enemyhp - magic * 40 * 2)
+		}
 		mana = mana - 150
 		}
 	}
 	function spellDecayingTouch() {
 		if (mana >= 400) {
+		if (staff == 0) {
 		decay[0] = decay[0] + magic * 5
 		decay[1] = decay[1] + Math.floor(magic / 5)
+		} else if (staff == 1) {
+		decay[0] = decay[0] + magic * 5 * 2
+		decay[1] = decay[1] + Math.floor(magic / 5) * 2
+		}
 		mana = mana - 400
 		}
 	}
@@ -635,6 +667,18 @@ function resetSave() {
 				gold = gold - 100000
 				swordthingy = "&nbsp;&nbsp;Already Purchased"
 				document.getElementById("swordthingy").innerHTML = swordthingy;
+			}
+		}
+	
+	}
+	
+	function buyStaff() {
+		if (gold >= 100000) {
+			if (staff != 1) {
+				staff = staff + 1
+				gold = gold - 100000
+				staffthingy = "&nbsp;&nbsp;Already Purchased"
+				document.getElementById("staffthingy").innerHTML = staffthingy;
 			}
 		}
 	
